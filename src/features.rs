@@ -13,16 +13,17 @@
 //! ## Feature Geometry
 //! -- write an explanation of feature geometry (what and why)
 //!<pre>
-//![+/-round]  [+/-anterior][+/-distib]  [+/-high][+/-low][+/-back]  [+/-ATR]
+//!  [round]  [+/-anterior][+/-distib]  [+/-high][+/-low][+/-back]  [+/-ATR]
 //!     |                |    |                  \    |   /             |
 //!  [labial]           [coronal]                 [dorsal]        [pharyngeal]
 //!      \__________________|_________________________|________________/
 //!                                      |
-//!                                    PLACE
+//!                                   [place]
 //!                                      |
-//!                                  X segment
+//!                                  X SEGMENT
 //!                              (+/- consonantal)
 //!                               (+/- sonorant)
+//!                               (+/- syllabic)
 //!        ______________________________|____________________________
 //!       /               |            |         |         |          \
 //![+/-continuant]  [+/-strident]  [lateral]  [nasal]  [laryngeal]  [rhotic]
