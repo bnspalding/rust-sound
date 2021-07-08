@@ -1,6 +1,9 @@
-//! Phonemes
+//! The phonological unit of speech sound.
 //!
-//! TODO: write module documentation
+//! Phonemes are the abstract blocks into which listeners divide and
+//! categorize speech sounds. They are associated with particular languages
+//! and vary from accent to accent. This package assumes that the symbolic
+//! representation for a phoneme is the International Phonetic Alphabet (IPA).
 
 use crate::features::Segment;
 
@@ -51,9 +54,9 @@ mod tests {
     fn mk_segment(sym: &str) -> Segment {
         Segment {
             root_features: RootFeatures {
-                consonantal: BinaryFeature::Minus,
-                sonorant: BinaryFeature::Minus,
-                syllabic: BinaryFeature::Minus,
+                consonantal: BinaryFeature::Unmarked,
+                sonorant: BinaryFeature::Unmarked,
+                syllabic: BinaryFeature::Unmarked,
             },
             autosegmental_features: AutosegmentalFeatures {
                 nasal: None,

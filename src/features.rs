@@ -163,9 +163,9 @@ pub struct LaryngealFeatures {
 ///dorsal consonants.
 pub enum BinaryFeature {
     ///The feature contrasts positively (it is notably there).
-    Plus,
+    Marked,
     ///The feature contrasts negatively (it is notably not there).
-    Minus,
+    Unmarked,
 }
 
 ///A Unary Feature is meaningful only when marked.
