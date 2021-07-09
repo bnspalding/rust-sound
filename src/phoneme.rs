@@ -25,7 +25,7 @@ impl Phoneme {
     ///The symbol associated with a phoneme. ex: 'p', 't͡ʃ'
     pub fn symbol(&self) -> String {
         match self {
-            Phoneme::Monosegment(s) => s.symbol.to_string(),
+            Phoneme::Monosegment(s) => s.symbol.clone(),
             Phoneme::Disegment(s1, s2) => {
                 format!("{}͡{}", &s1.symbol, &s2.symbol)
             }
