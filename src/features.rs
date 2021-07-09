@@ -154,8 +154,8 @@ pub struct LaryngealFeatures {
 ///
 ///Both the markedness (+) or unmarkedness (-) of the feature can be used to
 ///construct a natural class of sounds. This is different from Unary Features,
-///such as Nasal or Lateral, which are only meaningful as marked classes (-nasal
-///is not a utilized class of sounds).
+///such as Nasal or Lateral, which are only meaningful as marked classes
+///(-nasal is not a utilized class of sounds).
 ///
 ///When a feature is absent (neither marked or unmarked), it means that the
 ///mechanical preconditions for the feature are not present. For example, vowel
@@ -170,10 +170,11 @@ pub enum BinaryFeature {
 
 ///A Unary Feature is meaningful only when marked.
 ///
-///Natural classes do not form around the lack of a Unary Feature. When a feature is absent (not
-///marked), it means that the mechanical preconditions for the feature are not present. For
-///example, [nasal] is not specified for non-nasal consonants and non-nasal consonants do not form
-///a useful natural class in sound categorization.
+///Natural classes do not form around the lack of a Unary Feature. When a
+///feature is absent (not marked), it means that the mechanical preconditions
+///for the feature are not present. For example, \[nasal\] is not specified
+///for non-nasal consonants and non-nasal consonants do not form a useful
+///natural class in sound categorization.
 pub enum UnaryFeature {
     ///The feature is notably present on the segment
     Marked,

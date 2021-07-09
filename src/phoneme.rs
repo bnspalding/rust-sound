@@ -1,4 +1,4 @@
-//! The phonological unit of speech sound.
+//! Phonological unit of speech sound.
 //!
 //! Phonemes are the abstract blocks into which listeners divide and
 //! categorize speech sounds. They are associated with particular languages
