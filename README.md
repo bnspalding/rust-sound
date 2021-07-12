@@ -4,7 +4,7 @@ Sound contains a collection of tools for working with symbolic representations
 of speech sounds in Rust. This includes:
 
 - phonological units of sound (phoneme, syllable, word)
-- [phonological features](https://en.wikipedia.org/wiki/Distinctive_feature)
+- distinctive features (autosegmental features, feature geometry)
 
 ## Installation
 

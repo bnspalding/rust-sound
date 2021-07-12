@@ -1,24 +1,69 @@
 //! Distinctive features for describing phonemes.
 //!
 //! ## Distinctive Features
-//! -- what is a feature (as an abstraction)
-//! -- binary and unary features
-//! -- what assumptions/theories am I using?
-//! -- link to wiki pages/theory descriptions
 //!
+//! A Phoneme can be decomposed into a collection of abstract features that
+//! describe that sound. These features are based on perceptible qualities that
+//! exist in a phoneme's sound wave based on the physical/mechanical means by
+//! which a speaker produces sound. The \[nasal\] feature describes sounds
+//! where air passes through the nasal tract. The \[+/-voice\] feature
+//! describes sounds that are either voiced \[+voice\] or unvoiced \[-voice\].
+//!
+//! Feature systems are useful for a couple of reasons. First,
+//! they take an otherwise arbitrary collection (the set of phonemes in a
+//! language) and construct each element of the set from reusable, composable
+//! elements. Phonemes can be selected and discussed as subsets then, based on
+//! the underlying features they share.
+//! Additionally, the behavior of phonemes and the ways they are transformed
+//! in a system of language appear to be consistently explained by these
+//! feature divisions. Transformations don't occur on arbitrary
+//! subsets of phonemes, but instead on the natural classes of sounds formed
+//! by selecting features (ex: all nasal sounds, all high vowels, etc).
+//!
+//! There are a variety of systems for describing distinctive phonological
+//! features. The one represented here uses both [`Binary`] and [`Unary`]
+//! features to describe how a language perceives and treats sounds. It dabbles
+//! with autosegmental features, and it represents certain features as being
+//! structurally dependent on other features (feature geometry).
 //!
 //! ## Autosegmental Features
 //!
+//! Some features appear to behave autonomously of their associated segments,
+//! exhibiting behaviors where a feature does not associate in a one-to-one
+//! manner with a segment. These sorts of autosegmental phenomena are
+//! represented in a couple of ways in this module.
+//!
+//! [`Disegments`] are used to construct phonemes with a two-to-one
+//! feature-segment relationship (diphthongs, affricates). This relationship is
+//! constructed here not as a feature-segment relationship, however; instead it
+//! is a segment-phoneme relationship. This is an opinionated choice, and seeks
+//! to better align with the way that diphthongs and affricates appear as a
+//! multiple segments behaving as a single segment.
+//!
+//! Autosegmental features are all marked as optional within the structure of a
+//! segment. This can be used not only to describe phonemes where a feature is
+//! absent, but also to construct under-specified sounds that take features
+//! from nearby sounds in language production.
 //!
 //! ## Feature Geometry
-//! -- write an explanation of feature geometry (what and why)
+//!
+//! Features are organized into a tree-like structure in order to represent
+//! the material dependencies between some features. The rounding of the lips
+//! (\[round\]) is dependent on the presence of a \[labial\] feature, which is
+//! to say that it is dependent upon the use of lips. Transformations will
+//! often target a parent node in the feature geometry, affecting not only that
+//! feature, but all child nodes underneath that feature.
+//!
+//! The feature geometry used to represent segments in this module is
+//! depicted in the diagram below:
+//!
 //!<pre>
 //!  [round]  [+/-anterior][+/-distib]  [+/-high][+/-low][+/-back]  [+/-ATR]
 //!     |                |    |                  \    |   /             |
 //!  [labial]           [coronal]                 [dorsal]        [pharyngeal]
 //!      \__________________|_________________________|________________/
 //!                                      |
-//!                                   [place]
+//!                                    place
 //!                                      |
 //!                                  X SEGMENT
 //!                              (+/- consonantal)
@@ -30,6 +75,10 @@
 //!                                                    /    |    \
 //!                                                  [SG]  [CG]  [+/-voice]
 //!</pre>
+//!
+//! [`Unary`]: enum.UnaryFeature.html
+//! [`Binary`]: enum.BinaryFeature.html
+//! [`Disegments`]: ../phoneme/enum.Phoneme.html
 
 ///A Binary Feature describes a contrastive feature.
 ///
@@ -62,17 +111,13 @@ pub enum UnaryFeature {
 }
 
 ///A Segment is a structured collection of phonological features used to
-///describe a [`Phoneme`].
+///describe a Phoneme.
 ///
-///All segments have a collection of [`Root Features`] that are bound to the
-///segment. [`Autosegmental Features`] are more fluid, and only a subset of all
+///All segments have a collection of Root Features that are bound to the
+///segment. Autosegmental Features are more fluid, and only a subset of all
 ///autosegmental features are specified for any segment. These features behave
 ///differently from root features when a segment undergoes a phonological
 ///transformation.
-///
-///[`Phoneme`]: ../phoneme/enum.Phoneme.html
-///[`Root Features`]: struct.RootFeatures.html
-///[`Autosegmental Features`]: struct.AutosegmentalFeatures.html
 pub struct Segment {
     ///root features on a segment
     pub root_features: RootFeatures,

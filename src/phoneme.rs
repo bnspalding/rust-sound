@@ -51,6 +51,7 @@ mod tests {
         assert_eq!(m.symbol(), "t͡ʃ")
     }
 
+    // dummy segment constructor; only interested in the symbol.
     fn mk_segment(sym: &str) -> Segment {
         Segment {
             root_features: RootFeatures {
