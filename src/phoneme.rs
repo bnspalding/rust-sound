@@ -36,17 +36,20 @@ impl Phoneme {
 #[cfg(test)]
 mod tests {
     use super::Phoneme::{Disegment, Monosegment};
-    use super::*;
+    use crate::builders::SegmentBuilder;
 
     #[test]
     fn symbol_monosegment() {
-        let m = Monosegment(Segment::new(&[], "p"));
+        let m = Monosegment(SegmentBuilder::segment(&[], "p"));
         assert_eq!(m.symbol(), "p")
     }
 
     #[test]
     fn symbol_disegment() {
-        let m = Disegment(Segment::new(&[], "t"), Segment::new(&[], "ʃ"));
+        let m = Disegment(
+            SegmentBuilder::segment(&[], "t"),
+            SegmentBuilder::segment(&[], "ʃ"),
+        );
         assert_eq!(m.symbol(), "t͡ʃ")
     }
 }
