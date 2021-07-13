@@ -37,38 +37,16 @@ impl Phoneme {
 mod tests {
     use super::Phoneme::{Disegment, Monosegment};
     use super::*;
-    use crate::features::*;
 
     #[test]
     fn symbol_monosegment() {
-        let m = Monosegment(mk_segment("p"));
+        let m = Monosegment(Segment::new(&[], "p"));
         assert_eq!(m.symbol(), "p")
     }
 
     #[test]
     fn symbol_disegment() {
-        let m = Disegment(mk_segment("t"), mk_segment("ʃ"));
+        let m = Disegment(Segment::new(&[], "t"), Segment::new(&[], "ʃ"));
         assert_eq!(m.symbol(), "t͡ʃ")
-    }
-
-    // dummy segment constructor; only interested in the symbol.
-    fn mk_segment(sym: &str) -> Segment {
-        Segment {
-            root_features: RootFeatures {
-                consonantal: BinaryFeature::Unmarked,
-                sonorant: BinaryFeature::Unmarked,
-                syllabic: BinaryFeature::Unmarked,
-            },
-            autosegmental_features: AutosegmentalFeatures {
-                nasal: None,
-                lateral: None,
-                rhotic: None,
-                strident: None,
-                continuant: None,
-                place: None,
-                laryngeal: None,
-            },
-            symbol: sym.to_string(),
-        }
     }
 }
