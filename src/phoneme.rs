@@ -39,13 +39,13 @@ mod tests {
     use crate::builders::SegmentBuilder;
 
     #[test]
-    fn symbol_monosegment() {
+    fn test_symbol_monosegment() {
         let m = Monosegment(SegmentBuilder::segment(&[], "p"));
         assert_eq!(m.symbol(), "p")
     }
 
     #[test]
-    fn symbol_disegment() {
+    fn test_symbol_disegment() {
         let m = Disegment(
             SegmentBuilder::segment(&[], "t"),
             SegmentBuilder::segment(&[], "ʃ"),
