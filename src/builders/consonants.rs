@@ -2,10 +2,6 @@
 //!
 //! This module contains a collection of helpful builders for constructing consonants
 
-// m = vd bilabial nasal
-// m = SegmentBuilder::new(vec![vd, bilabial, nasal])
-// example: let p = SegmentBuilder::new().vd().
-
 use crate::features::*;
 
 /// a voiced segment
