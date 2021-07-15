@@ -6,6 +6,4 @@
 
 - manifest: add description
 
-- construct builders for consonants and vowels
-
 - use builders to create genam sound set
