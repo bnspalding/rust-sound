@@ -54,7 +54,7 @@ pub fn approximant(s: &mut Segment) {
 }
 
 /// a segment marked +strident
-pub fn strident(s: &mut Segment) {
+pub fn sibilant(s: &mut Segment) {
     s.autosegmental_features.strident = Some(BinaryFeature::Marked);
 }
 
@@ -229,8 +229,8 @@ mod tests {
     }
 
     #[test]
-    fn test_strident() {
-        let seg = SegmentBuilder::consonant(&[strident], "");
+    fn test_sibilant() {
+        let seg = SegmentBuilder::consonant(&[sibilant], "");
         assert_eq!(
             seg.autosegmental_features.strident,
             Some(BinaryFeature::Marked)

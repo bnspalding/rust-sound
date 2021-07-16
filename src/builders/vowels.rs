@@ -39,27 +39,39 @@ pub fn central(s: &mut Segment) {
 }
 
 /// tongue body is above neutral position (high-low)
+///
+/// high also defines ATR as unmarked. High and mid vowels have
+/// ATR. ATR is undefined on low vowels.
 pub fn high(s: &mut Segment) {
-    let d = s
+    let place = s
         .autosegmental_features
         .place
-        .get_or_insert(Place::default())
-        .dorsal
-        .get_or_insert(DorsalFeature::default());
+        .get_or_insert(Place::default());
+    let d = place.dorsal.get_or_insert(DorsalFeature::default());
     d.low = Some(BinaryFeature::Unmarked);
     d.high = Some(BinaryFeature::Marked);
+    place
+        .pharyngeal
+        .get_or_insert(PharyngealFeature::default())
+        .advanced_tongue_root = Some(BinaryFeature::Unmarked);
 }
 
 /// tongue body is neither high nor low
+///
+/// mid also defines ATR as unmarked. High and mid vowels have
+/// ATR. ATR is undefined on low vowels.
 pub fn mid(s: &mut Segment) {
-    let d = s
+    let place = s
         .autosegmental_features
         .place
-        .get_or_insert(Place::default())
-        .dorsal
-        .get_or_insert(DorsalFeature::default());
+        .get_or_insert(Place::default());
+    let d = place.dorsal.get_or_insert(DorsalFeature::default());
     d.low = Some(BinaryFeature::Unmarked);
     d.high = Some(BinaryFeature::Unmarked);
+    place
+        .pharyngeal
+        .get_or_insert(PharyngealFeature::default())
+        .advanced_tongue_root = Some(BinaryFeature::Unmarked);
 }
 
 /// tongue body is below neutral position (high-low)

@@ -5,5 +5,3 @@
 - possibly update data files to reflect changes in my model of features
 
 - manifest: add description
-
-- use builders to create genam sound set
