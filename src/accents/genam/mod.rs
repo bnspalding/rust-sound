@@ -12,8 +12,8 @@ mod sounds;
 /// phoneme provides a constructor for General American English phonemes.
 /// Given the IPA symbol for a phoneme, return the associated phoneme
 /// (if one exists).
-pub fn phoneme(symbol: &str) -> Option<&'static Phoneme> {
-    sounds::SOUNDS.get(symbol)
+pub fn phoneme(symbol: &str) -> Option<Phoneme> {
+    sounds::SOUNDS.get(symbol).cloned()
 }
 
 /// The set of IPA symbols that comprise the GenAm accent

@@ -14,7 +14,7 @@ use crate::features::Segment;
 ///segments (a disegment), as in the cases of diphthongs ('a͡ɪ') or affricates
 ///('t͡ʃ'). This representation does away with the need for a 'delrel' feature
 ///on segments.
-#[derive(PartialEq, Eq, Debug, Hash)]
+#[derive(PartialEq, Eq, Debug, Hash, Clone)]
 pub enum Phoneme {
     ///A phoneme with a single phonological segment
     Monosegment(Segment),
