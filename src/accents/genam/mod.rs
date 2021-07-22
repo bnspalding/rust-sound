@@ -2,7 +2,7 @@
 //!
 //! This module provides a mapping from a set of IPA symbols to a set of
 //! phonemes, based on the 'General American English' accent (see
-//! [https://en.wikipedia.org/wiki/General_American_English]).
+//! <https://en.wikipedia.org/wiki/General_American_English>).
 
 use crate::phoneme::Phoneme;
 use std::collections::HashSet;
