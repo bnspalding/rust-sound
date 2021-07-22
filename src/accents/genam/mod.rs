@@ -12,6 +12,22 @@ mod sounds;
 /// phoneme provides a constructor for General American English phonemes.
 /// Given the IPA symbol for a phoneme, return the associated phoneme
 /// (if one exists).
+///
+/// # Examples
+///
+/// ```
+/// # use sound::accents::genam::phoneme;
+/// # use sound::builders::SegmentBuilder;
+/// # use sound::builders::consonants::*;
+/// # use sound::phoneme::Phoneme::Monosegment;
+///
+/// let p = phoneme("p");
+///
+/// assert_eq!(
+///     p,
+///     Some(Monosegment(SegmentBuilder::consonant(&[vl, bilabial, stop], "p")))
+/// )
+/// ```
 pub fn phoneme(symbol: &str) -> Option<Phoneme> {
     sounds::SOUNDS.get(symbol).cloned()
 }

@@ -14,6 +14,31 @@ impl SegmentBuilder {
     /// Note that builders are applied in the order they are given (left to
     /// right). For cases where two builders modify the same field on a
     /// segment, be sure that the ordering of builders matches your intent.
+    ///
+    /// In most cases, [`SegmentBuilder::consonant`] or [`SegmentBuilder::vowel`]
+    /// are more appropriate for segment construction. Segment is useful for
+    /// arbitrary segments and constructs a root_features set that is by
+    /// default entirely Unmarked.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use sound::builders::SegmentBuilder;
+    /// use sound::builders::consonants::*;
+    /// use sound::features::*;
+    ///
+    /// let arbitrary_segment =
+    ///     SegmentBuilder::segment(&[
+    ///         vl,
+    ///         stop,
+    ///         |s| s.root_features.consonantal = BinaryFeature::Marked,
+    ///         |s| s.autosegmental_features
+    ///                 .laryngeal
+    ///                 .get_or_insert(LaryngealFeatures::default())
+    ///                 .spread_glottis = Some(UnaryFeature::Marked),
+    ///         ],
+    ///         "arb");
+    /// ```
     pub fn segment(builders: &[fn(&mut Segment)], sym: &str) -> Segment {
         let mut base = mk_base(sym);
 
@@ -33,6 +58,16 @@ impl SegmentBuilder {
     /// Note that builders are applied in the order they are given (left to
     /// right). For cases where two builders modify the same field on a
     /// segment, be sure that the ordering of builders matches your intent.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use sound::builders::SegmentBuilder;
+    /// use sound::builders::consonants::*;
+    /// use sound::phoneme::Phoneme::Monosegment;
+    ///
+    /// let p = Monosegment(SegmentBuilder::consonant(&[vl, bilabial, stop], "p"));
+    /// ```
     pub fn consonant(builders: &[fn(&mut Segment)], sym: &str) -> Segment {
         let mut base = mk_base(sym);
         base.root_features.consonantal = BinaryFeature::Marked;
@@ -50,6 +85,16 @@ impl SegmentBuilder {
     /// Note that builders are applied in the order they are given (left to
     /// right). For cases where two builders modify the same field on a
     /// segment, be sure that the ordering of builders matches your intent.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use sound::builders::SegmentBuilder;
+    /// use sound::builders::vowels::*;
+    /// use sound::phoneme::Phoneme::Monosegment;
+    ///
+    /// let i = Monosegment(SegmentBuilder::vowel(&[high, front, tense], "i"));
+    /// ```
     pub fn vowel(builders: &[fn(&mut Segment)], sym: &str) -> Segment {
         let mut base = mk_base(sym);
         base.root_features.sonorant = BinaryFeature::Marked;

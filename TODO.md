@@ -2,6 +2,4 @@
 
 - write up a semi-formal spec for the library to reorganize my thoughts
 
-- possibly update data files to reflect changes in my model of features
-
 - manifest: add description
