@@ -4,8 +4,4 @@
 
 - manifest: add description
 
-- add Syl structure
-
-- add Word structure
-
-- add lexical Stress
+- write examples for syl, word, and stress as appropriate

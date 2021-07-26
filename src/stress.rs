@@ -12,7 +12,7 @@
 
 /// Stress is represented with four levels of emphasis. Use [`toBinaryStress`]
 /// to reduce these four levels to binary stress.
-#[derive(PartialEq, Eq, PartialOrd, Ord, Debug)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Copy)]
 pub enum Stress {
     /// The syllable is not only least emphasized, but also reduced
     ReducedStress,
@@ -29,7 +29,7 @@ impl Stress {
     ///
     /// ReducedStress and Unstressed become Unstressed,
     /// SecondaryStress and Stressed become Stressed.
-    pub fn to_binary_stress(&self) -> BinaryStress {
+    pub fn to_binary_stress(self) -> BinaryStress {
         match self {
             Stress::ReducedStress | Stress::Unstressed => {
                 BinaryStress::Unstressed
@@ -39,10 +39,24 @@ impl Stress {
             }
         }
     }
+
+    /// symbol provides the IPA symbol associated with the stress level, if a
+    /// symbol is associated with that level of stress.
+    ///
+    /// ReducedStress and Unstressed levels have no marker.
+    /// SecondaryStress is marked with 'ˌ'.
+    /// Stressed is marked with 'ˈ'.
+    pub fn symbol(&self) -> Option<char> {
+        match self {
+            Stress::ReducedStress | Stress::Unstressed => None,
+            Stress::SecondaryStress => Some('ˌ'),
+            Stress::Stressed => Some('ˈ'),
+        }
+    }
 }
 
 /// BinaryStress represents two levels of syllable emphasis
-#[derive(PartialEq, Eq, PartialOrd, Ord, Debug)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Copy)]
 pub enum BinaryStress {
     /// The syllable is less emphasized than surrounding syllables
     Unstressed,
