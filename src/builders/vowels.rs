@@ -132,7 +132,7 @@ mod tests {
 
     #[test]
     fn test_front() {
-        let seg = SegmentBuilder::vowel(&[front], "");
+        let seg = SegmentBuilder::vowel(&[front], 'a');
         assert_eq!(
             seg.autosegmental_features
                 .place
@@ -146,7 +146,7 @@ mod tests {
 
     #[test]
     fn test_central() {
-        let seg = SegmentBuilder::vowel(&[central], "");
+        let seg = SegmentBuilder::vowel(&[central], 'a');
         assert_eq!(
             seg.autosegmental_features
                 .place
@@ -160,7 +160,7 @@ mod tests {
 
     #[test]
     fn test_back() {
-        let seg = SegmentBuilder::vowel(&[back], "");
+        let seg = SegmentBuilder::vowel(&[back], 'a');
         assert_eq!(
             seg.autosegmental_features
                 .place
@@ -174,7 +174,7 @@ mod tests {
 
     #[test]
     fn test_high() {
-        let seg = SegmentBuilder::vowel(&[high], "");
+        let seg = SegmentBuilder::vowel(&[high], 'a');
         let d = seg.autosegmental_features.place.unwrap().dorsal.unwrap();
         assert_eq!(d.low, Some(BinaryFeature::Unmarked));
         assert_eq!(d.high, Some(BinaryFeature::Marked));
@@ -182,7 +182,7 @@ mod tests {
 
     #[test]
     fn test_mid() {
-        let seg = SegmentBuilder::vowel(&[mid], "");
+        let seg = SegmentBuilder::vowel(&[mid], 'a');
         let d = seg.autosegmental_features.place.unwrap().dorsal.unwrap();
         assert_eq!(d.low, Some(BinaryFeature::Unmarked));
         assert_eq!(d.high, Some(BinaryFeature::Unmarked));
@@ -190,7 +190,7 @@ mod tests {
 
     #[test]
     fn test_low() {
-        let seg = SegmentBuilder::vowel(&[low], "");
+        let seg = SegmentBuilder::vowel(&[low], 'a');
         let d = seg.autosegmental_features.place.unwrap().dorsal.unwrap();
         assert_eq!(d.low, Some(BinaryFeature::Marked));
         assert_eq!(d.high, Some(BinaryFeature::Unmarked));
@@ -198,7 +198,7 @@ mod tests {
 
     #[test]
     fn test_rounded() {
-        let seg = SegmentBuilder::vowel(&[rounded], "");
+        let seg = SegmentBuilder::vowel(&[rounded], 'a');
         assert_eq!(
             seg.autosegmental_features
                 .place
@@ -212,7 +212,7 @@ mod tests {
 
     #[test]
     fn test_unrounded() {
-        let seg = SegmentBuilder::vowel(&[unrounded], "");
+        let seg = SegmentBuilder::vowel(&[unrounded], 'a');
         assert_eq!(
             seg.autosegmental_features
                 .place
@@ -226,7 +226,7 @@ mod tests {
 
     #[test]
     fn test_tense() {
-        let seg = SegmentBuilder::vowel(&[tense], "");
+        let seg = SegmentBuilder::vowel(&[tense], 'a');
         assert_eq!(
             seg.autosegmental_features
                 .place
@@ -240,7 +240,7 @@ mod tests {
 
     #[test]
     fn test_rhotic() {
-        let seg = SegmentBuilder::vowel(&[rhotic], "");
+        let seg = SegmentBuilder::vowel(&[rhotic], 'a');
         assert_eq!(
             seg.autosegmental_features.rhotic,
             Some(UnaryFeature::Marked)

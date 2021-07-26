@@ -37,9 +37,9 @@ impl SegmentBuilder {
     ///                 .get_or_insert(LaryngealFeatures::default())
     ///                 .spread_glottis = Some(UnaryFeature::Marked),
     ///         ],
-    ///         "arb");
+    ///         'a');
     /// ```
-    pub fn segment(builders: &[fn(&mut Segment)], sym: &str) -> Segment {
+    pub fn segment(builders: &[fn(&mut Segment)], sym: char) -> Segment {
         let mut base = mk_base(sym);
 
         for f in builders {
@@ -66,9 +66,9 @@ impl SegmentBuilder {
     /// use sound::builders::consonants::*;
     /// use sound::phoneme::Phoneme::Monosegment;
     ///
-    /// let p = Monosegment(SegmentBuilder::consonant(&[vl, bilabial, stop], "p"));
+    /// let p = Monosegment(SegmentBuilder::consonant(&[vl, bilabial, stop], 'p'));
     /// ```
-    pub fn consonant(builders: &[fn(&mut Segment)], sym: &str) -> Segment {
+    pub fn consonant(builders: &[fn(&mut Segment)], sym: char) -> Segment {
         let mut base = mk_base(sym);
         base.root_features.consonantal = BinaryFeature::Marked;
 
@@ -93,9 +93,9 @@ impl SegmentBuilder {
     /// use sound::builders::vowels::*;
     /// use sound::phoneme::Phoneme::Monosegment;
     ///
-    /// let i = Monosegment(SegmentBuilder::vowel(&[high, front, tense], "i"));
+    /// let i = Monosegment(SegmentBuilder::vowel(&[high, front, tense], 'i'));
     /// ```
-    pub fn vowel(builders: &[fn(&mut Segment)], sym: &str) -> Segment {
+    pub fn vowel(builders: &[fn(&mut Segment)], sym: char) -> Segment {
         let mut base = mk_base(sym);
         base.root_features.sonorant = BinaryFeature::Marked;
         base.root_features.syllabic = BinaryFeature::Marked;
@@ -108,7 +108,7 @@ impl SegmentBuilder {
     }
 }
 
-fn mk_base(sym: &str) -> Segment {
+fn mk_base(sym: char) -> Segment {
     Segment {
         root_features: RootFeatures {
             consonantal: BinaryFeature::Unmarked,
@@ -116,7 +116,7 @@ fn mk_base(sym: &str) -> Segment {
             syllabic: BinaryFeature::Unmarked,
         },
         autosegmental_features: AutosegmentalFeatures::default(),
-        symbol: sym.to_string(),
+        symbol: sym,
     }
 }
 
@@ -128,19 +128,16 @@ mod tests {
     // Builders can be arbitrary and apply in order to a segment
     fn test_builder_fns() {
         let seg = SegmentBuilder::segment(
-            &[
-                |s| s.symbol = String::from("arbitrary"),
-                |s| s.symbol = String::from("arbitrary two"),
-            ],
-            "overwritten",
+            &[|s| s.symbol = 'x', |s| s.symbol = 'y'],
+            'a',
         );
-        assert_eq!(seg.symbol, "arbitrary two");
+        assert_eq!(seg.symbol, 'y');
     }
 
     #[test]
     // Segment is by default unmarked and empty
     fn test_segment() {
-        let seg = SegmentBuilder::segment(&[], "p");
+        let seg = SegmentBuilder::segment(&[], 'p');
         assert_eq!(
             seg,
             Segment {
@@ -158,7 +155,7 @@ mod tests {
                     place: None,
                     laryngeal: None,
                 },
-                symbol: String::from("p"),
+                symbol: 'p',
             }
         );
     }
@@ -166,7 +163,7 @@ mod tests {
     #[test]
     // Consonant is by default (+consonantal, -sonorant, -syllabic) and empty
     fn test_consonant() {
-        let seg = SegmentBuilder::consonant(&[], "p");
+        let seg = SegmentBuilder::consonant(&[], 'p');
         assert_eq!(
             seg,
             Segment {
@@ -184,7 +181,7 @@ mod tests {
                     place: None,
                     laryngeal: None,
                 },
-                symbol: String::from("p"),
+                symbol: 'p',
             }
         );
     }
@@ -192,7 +189,7 @@ mod tests {
     #[test]
     // Consonant is by default (-consonantal, +sonorant, +syllabic) and empty
     fn test_vowel() {
-        let seg = SegmentBuilder::vowel(&[], "p");
+        let seg = SegmentBuilder::vowel(&[], 'p');
         assert_eq!(
             seg,
             Segment {
@@ -210,7 +207,7 @@ mod tests {
                     place: None,
                     laryngeal: None,
                 },
-                symbol: String::from("p"),
+                symbol: 'p',
             }
         );
     }

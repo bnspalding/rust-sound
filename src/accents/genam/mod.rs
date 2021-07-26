@@ -25,7 +25,7 @@ mod sounds;
 ///
 /// assert_eq!(
 ///     p,
-///     Some(Monosegment(SegmentBuilder::consonant(&[vl, bilabial, stop], "p")))
+///     Some(Monosegment(SegmentBuilder::consonant(&[vl, bilabial, stop], 'p')))
 /// )
 /// ```
 pub fn phoneme(symbol: &str) -> Option<Phoneme> {
