@@ -10,8 +10,8 @@
 //! open. The CMU Pronouncing Dictionary uses three levels, which would map to
 //! 0-Unstressed, 1-Stressed 2-SecondaryStress.
 
-/// Stress is represented with four levels of emphasis. Use [`toBinaryStress`]
-/// to reduce these four levels to binary stress.
+/// Stress is represented with four levels of emphasis. Use
+/// [`Stress.to_binary_stress`] to reduce these four levels to binary stress.
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Copy)]
 pub enum Stress {
     /// The syllable is not only least emphasized, but also reduced
