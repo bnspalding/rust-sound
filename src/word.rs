@@ -1,17 +1,17 @@
-//! A collection of Syls
+//! A collection of Syllables
 //!
 //! A word is an ordered list of syllables. It also provides functions for
 //! flattening the sounds and stresses of a word into lists.
 
 use crate::phoneme::Phoneme;
 use crate::stress::Stress;
-use crate::syllable::Syl;
+use crate::syllable::Syllable;
 
 /// A word is a collection of syllables. It represents a spoken word, or
 /// perhaps the pronunciation information that would correspond to a written
 /// word.
 pub struct Word {
-    syls: Vec<Syl>,
+    syls: Vec<Syllable>,
 }
 
 impl Word {
@@ -95,8 +95,8 @@ mod tests {
         nucleus: Phoneme,
         coda: Vec<Phoneme>,
         stress: Stress,
-    ) -> Syl {
-        Syl {
+    ) -> Syllable {
+        Syllable {
             onset,
             nucleus,
             coda,

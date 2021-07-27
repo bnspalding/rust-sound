@@ -9,10 +9,10 @@
 use crate::phoneme::Phoneme;
 use crate::stress::Stress;
 
-/// Syl describes a structured collection of phonemes, what people commonly
+/// A Syllable describes a structured collection of phonemes, what people commonly
 /// distinguish as the unit out of which words are constructed.
 #[derive(PartialEq, Eq, Debug)]
-pub struct Syl {
+pub struct Syllable {
     /// The onset is the collection of phonemes that begin a syllable
     pub onset: Vec<Phoneme>,
     /// The nucleus, normally a vowel, is the most sonorous phoneme in the syl.
@@ -24,7 +24,7 @@ pub struct Syl {
     pub stress: Option<Stress>,
 }
 
-impl Syl {
+impl Syllable {
     /// The rhyme is the nucleus and coda of a syllable together.
     pub fn rhyme(&self) -> Vec<Phoneme> {
         let mut vec = vec![self.nucleus];
@@ -45,7 +45,7 @@ impl Syl {
     /// single String.
     ///
     /// Because stress is only relevant between syllables, it is not rendered
-    /// as part of a Syl's symbols, but instead as part of a Word's symbols.
+    /// as part of a Syllable's symbols, but instead as part of a Word's symbols.
     pub fn symbols(&self) -> String {
         self.phonemes()
             .iter()
@@ -60,8 +60,8 @@ mod tests {
     use crate::phoneme::Phoneme;
     use crate::stress::Stress;
 
-    fn test_syl() -> Syl {
-        Syl {
+    fn test_syl() -> Syllable {
+        Syllable {
             onset: vec![phon("p"), phon("ɹ")],
             nucleus: phon("ɑ"),
             coda: vec![phon("p")],
