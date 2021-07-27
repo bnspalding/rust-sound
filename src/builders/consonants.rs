@@ -152,7 +152,7 @@ mod tests {
 
     #[test]
     fn test_vd() {
-        let seg = SegmentBuilder::consonant(&[vd], "");
+        let seg = SegmentBuilder::consonant(&[vd], 'a');
         assert_eq!(
             seg.autosegmental_features.laryngeal.unwrap().voice,
             Some(BinaryFeature::Marked)
@@ -161,7 +161,7 @@ mod tests {
 
     #[test]
     fn test_vl() {
-        let seg = SegmentBuilder::consonant(&[vl], "");
+        let seg = SegmentBuilder::consonant(&[vl], 'a');
         assert_eq!(
             seg.autosegmental_features.laryngeal.unwrap().voice,
             Some(BinaryFeature::Unmarked)
@@ -170,7 +170,7 @@ mod tests {
 
     #[test]
     fn test_stop() {
-        let seg = SegmentBuilder::consonant(&[stop], "");
+        let seg = SegmentBuilder::consonant(&[stop], 'a');
         assert_eq!(seg.root_features.sonorant, BinaryFeature::Unmarked);
         assert_eq!(
             seg.autosegmental_features.continuant,
@@ -180,7 +180,7 @@ mod tests {
 
     #[test]
     fn test_nasal() {
-        let seg = SegmentBuilder::consonant(&[nasal], "");
+        let seg = SegmentBuilder::consonant(&[nasal], 'a');
         assert_eq!(seg.root_features.sonorant, BinaryFeature::Marked);
         assert_eq!(
             seg.autosegmental_features.continuant,
@@ -194,7 +194,7 @@ mod tests {
 
     #[test]
     fn test_fricative() {
-        let seg = SegmentBuilder::consonant(&[fricative], "");
+        let seg = SegmentBuilder::consonant(&[fricative], 'a');
         assert_eq!(seg.root_features.sonorant, BinaryFeature::Unmarked);
         assert_eq!(
             seg.autosegmental_features.continuant,
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn test_glide() {
-        let seg = SegmentBuilder::consonant(&[glide], "");
+        let seg = SegmentBuilder::consonant(&[glide], 'a');
         assert_eq!(seg.root_features.consonantal, BinaryFeature::Unmarked);
         assert_eq!(seg.root_features.sonorant, BinaryFeature::Marked);
         assert_eq!(seg.root_features.syllabic, BinaryFeature::Unmarked);
@@ -220,7 +220,7 @@ mod tests {
 
     #[test]
     fn test_approximant() {
-        let seg = SegmentBuilder::consonant(&[approximant], "");
+        let seg = SegmentBuilder::consonant(&[approximant], 'a');
         assert_eq!(seg.root_features.sonorant, BinaryFeature::Marked);
         assert_eq!(
             seg.autosegmental_features.continuant,
@@ -230,7 +230,7 @@ mod tests {
 
     #[test]
     fn test_sibilant() {
-        let seg = SegmentBuilder::consonant(&[sibilant], "");
+        let seg = SegmentBuilder::consonant(&[sibilant], 'a');
         assert_eq!(
             seg.autosegmental_features.strident,
             Some(BinaryFeature::Marked)
@@ -239,7 +239,7 @@ mod tests {
 
     #[test]
     fn test_distrib() {
-        let seg = SegmentBuilder::consonant(&[distrib], "");
+        let seg = SegmentBuilder::consonant(&[distrib], 'a');
         assert_eq!(
             seg.autosegmental_features
                 .place
@@ -253,7 +253,7 @@ mod tests {
 
     #[test]
     fn test_lateral() {
-        let seg = SegmentBuilder::consonant(&[lateral], "");
+        let seg = SegmentBuilder::consonant(&[lateral], 'a');
         assert_eq!(
             seg.autosegmental_features.lateral,
             Some(UnaryFeature::Marked)
@@ -262,7 +262,7 @@ mod tests {
 
     #[test]
     fn test_rhotic() {
-        let seg = SegmentBuilder::consonant(&[rhotic], "");
+        let seg = SegmentBuilder::consonant(&[rhotic], 'a');
         assert_eq!(
             seg.autosegmental_features.rhotic,
             Some(UnaryFeature::Marked)
@@ -271,7 +271,7 @@ mod tests {
 
     #[test]
     fn test_bilabial() {
-        let seg = SegmentBuilder::consonant(&[bilabial], "");
+        let seg = SegmentBuilder::consonant(&[bilabial], 'a');
         assert_eq!(
             seg.autosegmental_features.place.unwrap().labial,
             Some(LabialFeature { round: None })
@@ -280,7 +280,7 @@ mod tests {
 
     #[test]
     fn test_labiodental() {
-        let seg = SegmentBuilder::consonant(&[labiodental], "");
+        let seg = SegmentBuilder::consonant(&[labiodental], 'a');
         assert_eq!(
             seg.autosegmental_features.place.unwrap().labial,
             Some(LabialFeature { round: None })
@@ -289,7 +289,7 @@ mod tests {
 
     #[test]
     fn test_alveolar() {
-        let seg = SegmentBuilder::consonant(&[alveolar], "");
+        let seg = SegmentBuilder::consonant(&[alveolar], 'a');
         assert_eq!(
             seg.autosegmental_features.place.unwrap().coronal,
             Some(CoronalFeature {
@@ -301,7 +301,7 @@ mod tests {
 
     #[test]
     fn test_dental() {
-        let seg = SegmentBuilder::consonant(&[dental], "");
+        let seg = SegmentBuilder::consonant(&[dental], 'a');
         assert_eq!(
             seg.autosegmental_features.place.unwrap().coronal,
             Some(CoronalFeature {
@@ -313,7 +313,7 @@ mod tests {
 
     #[test]
     fn test_postalveolar() {
-        let seg = SegmentBuilder::consonant(&[postalveolar], "");
+        let seg = SegmentBuilder::consonant(&[postalveolar], 'a');
         assert_eq!(
             seg.autosegmental_features.place.unwrap().coronal,
             Some(CoronalFeature {
@@ -325,7 +325,7 @@ mod tests {
 
     #[test]
     fn test_velar() {
-        let seg = SegmentBuilder::consonant(&[velar], "");
+        let seg = SegmentBuilder::consonant(&[velar], 'a');
         assert_eq!(
             seg.autosegmental_features.place.unwrap().dorsal,
             Some(DorsalFeature {
@@ -338,7 +338,7 @@ mod tests {
 
     #[test]
     fn test_palatal() {
-        let seg = SegmentBuilder::consonant(&[palatal], "");
+        let seg = SegmentBuilder::consonant(&[palatal], 'a');
         assert_eq!(
             seg.autosegmental_features.place.unwrap().dorsal,
             Some(DorsalFeature {
@@ -351,7 +351,7 @@ mod tests {
 
     #[test]
     fn test_glottal() {
-        let seg = SegmentBuilder::consonant(&[glottal], "");
+        let seg = SegmentBuilder::consonant(&[glottal], 'a');
         assert_eq!(
             seg.autosegmental_features.laryngeal,
             Some(LaryngealFeatures {

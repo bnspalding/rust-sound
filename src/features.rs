@@ -91,7 +91,7 @@
 ///mechanical preconditions for the feature are not present. For example, vowel
 ///space features such as [+/-high], [+/-low], [+/-back] are not specified for
 ///dorsal consonants.
-#[derive(PartialEq, Eq, Debug, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Hash, Clone, Copy)]
 pub enum BinaryFeature {
     ///The feature contrasts positively (it is notably there).
     Marked,
@@ -106,7 +106,7 @@ pub enum BinaryFeature {
 ///for the feature are not present. For example, \[nasal\] is not specified
 ///for non-nasal consonants and non-nasal consonants do not form a useful
 ///natural class in sound categorization.
-#[derive(PartialEq, Eq, Debug, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Hash, Clone, Copy)]
 pub enum UnaryFeature {
     ///The feature is notably present on the segment
     Marked,
@@ -120,21 +120,21 @@ pub enum UnaryFeature {
 ///autosegmental features are specified for any segment. These features behave
 ///differently from root features when a segment undergoes a phonological
 ///transformation.
-#[derive(PartialEq, Eq, Debug, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Hash, Clone, Copy)]
 pub struct Segment {
     ///root features on a segment
     pub root_features: RootFeatures,
     ///autosegmental features on a segment
     pub autosegmental_features: AutosegmentalFeatures,
     ///symbolic representation of a segment
-    pub symbol: String,
+    pub symbol: char,
 }
 
 ///Root Features describe all phonological segments.
 ///
 ///These features are bound to a segment and do not exhibit autosegmental
 ///behaviors.
-#[derive(PartialEq, Eq, Debug, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Hash, Clone, Copy)]
 pub struct RootFeatures {
     ///Constriction of the vocal tract: consonants (+); vowels (-).
     pub consonantal: BinaryFeature,
@@ -151,7 +151,7 @@ pub struct RootFeatures {
 ///
 ///Some features are dependent on the presence of other parent features,
 ///resulting in a tree structure.
-#[derive(PartialEq, Eq, Debug, Default, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Default, Hash, Clone, Copy)]
 pub struct AutosegmentalFeatures {
     ///air passes through the nasal tract: 'n', 'm', 'ŋ'.
     pub nasal: Option<UnaryFeature>,
@@ -174,7 +174,7 @@ pub struct AutosegmentalFeatures {
 ///This feature group captures dependencies of features that only appear at
 ///certain points of articulation in the mouth. It also permits transformations
 ///to target place of articulation as group of features.
-#[derive(PartialEq, Eq, Debug, Default, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Default, Hash, Clone, Copy)]
 pub struct Place {
     ///articulation using the lips: 'p', 'm', vowel rounding.
     pub labial: Option<LabialFeature>,
@@ -187,14 +187,14 @@ pub struct Place {
 }
 
 ///Features determined by behavior involving the lips.
-#[derive(PartialEq, Eq, Debug, Default, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Default, Hash, Clone, Copy)]
 pub struct LabialFeature {
     ///rounding of the lips during sound production: round vowels (+).
     pub round: Option<UnaryFeature>,
 }
 
 ///Features determined by behavior involving the front of the tongue.
-#[derive(PartialEq, Eq, Debug, Default, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Default, Hash, Clone, Copy)]
 pub struct CoronalFeature {
     ///relation of the tongue to the alveolar ridge: dentals, alveolars (+).
     pub anterior: Option<BinaryFeature>,
@@ -207,7 +207,7 @@ pub struct CoronalFeature {
 ///Vowel space is defined with both a [+/-high] and a [+/-low], following a
 ///tradition of characterizing high vowels as (+high,-low), low vowels as
 ///(-high, +low), and mid vowels as (-high, -low).
-#[derive(PartialEq, Eq, Debug, Default, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Default, Hash, Clone, Copy)]
 pub struct DorsalFeature {
     ///high tongue position: high vowels (+); mid and low vowels (-).
     pub high: Option<BinaryFeature>,
@@ -218,7 +218,7 @@ pub struct DorsalFeature {
 }
 
 ///Features determined by behavior at the root of the tongue.
-#[derive(PartialEq, Eq, Debug, Default, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Default, Hash, Clone, Copy)]
 pub struct PharyngealFeature {
     ///tongue root is forward. doubles as [+/-tense]. 'i', 'e', 'u', 'o' (+).
     ///ATR should be undefined for low vowels.
@@ -226,7 +226,7 @@ pub struct PharyngealFeature {
 }
 
 ///Features determined by the behavior of the vocal folds.
-#[derive(PartialEq, Eq, Debug, Default, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Default, Hash, Clone, Copy)]
 pub struct LaryngealFeatures {
     ///open vocal folds: aspirated segments.
     pub spread_glottis: Option<UnaryFeature>,

@@ -14,7 +14,7 @@ use crate::features::Segment;
 ///segments (a disegment), as in the cases of diphthongs ('a͡ɪ') or affricates
 ///('t͡ʃ'). This representation does away with the need for a 'delrel' feature
 ///on segments.
-#[derive(PartialEq, Eq, Debug, Hash, Clone)]
+#[derive(PartialEq, Eq, Debug, Hash, Clone, Copy)]
 pub enum Phoneme {
     ///A phoneme with a single phonological segment
     Monosegment(Segment),
@@ -26,7 +26,7 @@ impl Phoneme {
     ///The symbol associated with a phoneme. ex: 'p', 't͡ʃ'
     pub fn symbol(&self) -> String {
         match self {
-            Phoneme::Monosegment(s) => s.symbol.clone(),
+            Phoneme::Monosegment(s) => s.symbol.to_string(),
             Phoneme::Disegment(s1, s2) => {
                 format!("{}͡{}", &s1.symbol, &s2.symbol)
             }
@@ -41,15 +41,15 @@ mod tests {
 
     #[test]
     fn test_symbol_monosegment() {
-        let m = Monosegment(SegmentBuilder::segment(&[], "p"));
+        let m = Monosegment(SegmentBuilder::segment(&[], 'p'));
         assert_eq!(m.symbol(), "p")
     }
 
     #[test]
     fn test_symbol_disegment() {
         let m = Disegment(
-            SegmentBuilder::segment(&[], "t"),
-            SegmentBuilder::segment(&[], "ʃ"),
+            SegmentBuilder::segment(&[], 't'),
+            SegmentBuilder::segment(&[], 'ʃ'),
         );
         assert_eq!(m.symbol(), "t͡ʃ")
     }

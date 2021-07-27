@@ -8,3 +8,6 @@ pub mod accents;
 pub mod builders;
 pub mod features;
 pub mod phoneme;
+pub mod stress;
+pub mod syllable;
+pub mod word;
