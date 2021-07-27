@@ -4,7 +4,9 @@
 //! phonemes, based on the 'General American English' accent (see
 //! <https://en.wikipedia.org/wiki/General_American_English>).
 
+use crate::builders::words::{from_accent, WordConstructorError};
 use crate::phoneme::Phoneme;
+use crate::word::Word;
 use std::collections::HashSet;
 
 mod sounds;
@@ -40,6 +42,11 @@ pub fn symbols() -> HashSet<&'static str> {
 /// The set of Phonemes that comprise the GenAm accent
 pub fn phonemes() -> HashSet<&'static Phoneme> {
     sounds::SOUNDS.values().collect()
+}
+
+/// TODO: write documentation
+pub fn word(word_desc: &str) -> Result<Word, WordConstructorError> {
+    from_accent(phoneme, word_desc)
 }
 
 #[cfg(test)]

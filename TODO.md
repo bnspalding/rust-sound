@@ -7,3 +7,7 @@
 - write constructor for words in genam
 
 - write a general constructor for words to be used by different accents
+
+- both constructors require multiple examples
+
+- write documentation for genam::word

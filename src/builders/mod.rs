@@ -2,6 +2,7 @@
 
 pub mod consonants;
 pub mod vowels;
+pub mod words;
 
 use crate::features::*;
 
