@@ -11,6 +11,7 @@ use crate::syllable::Syllable;
 /// perhaps the pronunciation information that would correspond to a written
 /// word.
 pub struct Word {
+    /// the collection of syllables that comprise a word
     pub syls: Vec<Syllable>,
 }
 
