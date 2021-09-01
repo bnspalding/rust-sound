@@ -12,6 +12,4 @@
 
 - write tests for buildes.word constructor
 
-- test that grapheme segmentation works as intended for IPA symbols
-
 - write documentation for genam::word

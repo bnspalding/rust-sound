@@ -38,12 +38,16 @@ type ProtoWord = Vec<ProtoSyl>;
 
 /// from_accent constructs a word from a word description using an accent's
 /// phoneme function.
-// Because +/-syllabic is a feature, slashes can hypothetically be ommitted.
-// ˈæ.pəl is fine on its own because you can just place a single syllabic phoneme into the nucleus
-// This works so long as the assumption that all syllables contain a single syllabic item is held
-//
-// Reduced stress is still a thing not specified by standard IPA, so supporting an alternate
-// notation for stress (1-4) makes sense.
+///
+/// Stress can be written using either IPA notation (ˈ, ˌ, .) or numbers (1,2,3,4). The only way to
+/// note reduced stress on a syllable is to use the number 4, because there is no corresponding
+/// symbol in IPA.
+///
+/// NOTE: Grapheme segmentation does not fully match the way that symbols should be segmented
+/// for IPA descriptions of words. Symbols using the combining breve (diphthongs, affricates)
+/// can still be written as multiple characters. For other symbols however (such as r-colored
+/// schwa), be sure to use the combined version of the character rather than the multi-character
+/// version.
 pub fn from_accent<F>(
     accent: F,
     word_desc: &str,
@@ -53,9 +57,6 @@ where
 {
     let mut proto_word = vec![];
 
-    // TODO IMPORTANT: I haven't verified that grapheme segmentation actually segments correctly for IPA
-    // symbols. For example, is a stress mark (such as 'ˈ') its own segment? are two joined letters
-    // (t͡ʃ) a single segment?
     let mut graphemes =
         UnicodeSegmentation::graphemes(word_desc, true).peekable();
 
@@ -66,14 +67,25 @@ where
         }
         Some(first_symbol) => if !is_stress_symbol(first_symbol) {},
     };
+
     //Parse remaining symbols in word description
-    for symbol in graphemes {
-        if let Some(err) = read_symbol(symbol, &mut proto_word, &accent) {
+    //We need to use while instead of a standard for...in in order to handle multi-grapheme symbols
+    //that use the combineing breve (u0361). Grapheme segmentation combines the breve with the
+    //frist symbol of the sequence, but reads the second symbol as an independent grapheme.
+    while let Some(symbol) = graphemes.next() {
+        //special handling for combining breve (u0361): get the next symbol and combine
+        let symbol_checked = if symbol.contains('͡') {
+            symbol.to_owned() + graphemes.next().unwrap()
+        } else {
+            symbol.to_string()
+        };
+
+        if let Some(err) =
+            read_symbol(&symbol_checked, &mut proto_word, &accent)
+        {
             return Err(err);
         }
     }
-
-    //convert the constructed protoWord into a word
     //If it is only one syllable long, remove stress information
     let word = Word {
         syls: proto_word
