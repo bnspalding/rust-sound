@@ -10,6 +10,4 @@
 
 - both constructors require multiple examples
 
-- write tests for buildes.word constructor
-
 - write documentation for genam::word
