@@ -41,11 +41,8 @@ type ProtoWord = Vec<ProtoSyl>;
 /// note reduced stress on a syllable is to use the number 4, because there is no corresponding
 /// symbol in IPA.
 ///
-/// NOTE: Grapheme segmentation does not fully match the way that symbols should be segmented
-/// for IPA descriptions of words. Symbols using the combining breve (diphthongs, affricates)
-/// can still be written as multiple characters. For other symbols however (such as r-colored
-/// schwa), be sure to use the combined version of the character rather than the multi-character
-/// version.
+/// Special consideration has been made for combining breve (u0361) and combining r hook (u02de) so
+/// that these symbols can be used as part of word descriptions.
 pub fn from_accent<F>(
     accent: F,
     word_desc: &str,
@@ -58,25 +55,22 @@ where
     let mut graphemes =
         UnicodeSegmentation::graphemes(word_desc, true).peekable();
 
-    //Special handling: peek first symbol for optional stress/syllable mark
-    match graphemes.peek() {
-        None => {
-            return Err(WordConstructorError::new("word description is empty"));
-        }
-        Some(first_symbol) => if !is_stress_symbol(first_symbol) {},
-    };
-
     //Parse remaining symbols in word description
     //We need to use while instead of a standard for...in in order to handle multi-grapheme symbols
     //that use the combineing breve (u0361). Grapheme segmentation combines the breve with the
     //frist symbol of the sequence, but reads the second symbol as an independent grapheme.
     while let Some(symbol) = graphemes.next() {
         //special handling for combining breve (u0361): get the next symbol and combine
-        let symbol_checked = if symbol.contains('͡') {
+        let mut symbol_checked = if symbol.contains('͡') {
             symbol.to_owned() + graphemes.next().unwrap()
         } else {
             symbol.to_string()
         };
+
+        //special handling for following r hook (u02DE): combine it with the current symbol
+        if let Some(&"˞") = graphemes.peek() {
+            symbol_checked += graphemes.next().unwrap()
+        }
 
         if let Some(err) =
             read_symbol(&symbol_checked, &mut proto_word, &accent)
@@ -87,8 +81,6 @@ where
 
     // Build a word from the proto_word.
     // If it is only one syllable long, remove stress information
-    // Note: Should avoid unwrap. Rather than check the nuclei above, the map should return a
-    // result which should then be checked for errors
     let checked_syls = proto_word
         .iter()
         .map(|syl| {
@@ -258,7 +250,7 @@ mod tests {
             "t" => Some(mock_phon_m('t')),
             "s" => Some(mock_phon_m('s')),
             "i" => Some(mock_phon_m('i')),
-            "ɚ" => Some(mock_phon_m('ɚ')),
+            "ə˞" => Some(mock_phon_m('ɚ')),
             _ => None,
         }
     }
@@ -335,7 +327,7 @@ mod tests {
     //testing use of numbered stress
     fn test_from_accent_numbered_stress() -> Result<(), WordConstructorError> {
         assert_eq!(
-            from_accent(mock_accent, "2ti4tɚ")?,
+            from_accent(mock_accent, "2ti4tə˞")?,
             Word {
                 syls: vec![
                     Syllable {
