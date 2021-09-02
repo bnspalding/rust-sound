@@ -1,8 +1,6 @@
 //! Constructor for words
 //!
-//! Builders::Words provides a constructor for words. It parses a word description
-//! into a structured word (syllables and phonemes), using a given accent's phoneme
-//! lookup function.
+//! Builders::Words provides a constructor for words. It parses a word description into a structured word (syllables and phonemes), using a given accent's phoneme lookup function.
 
 use crate::features;
 use crate::phoneme::Phoneme;
@@ -86,24 +84,38 @@ where
             return Err(err);
         }
     }
-    //If it is only one syllable long, remove stress information
-    let word = Word {
-        syls: proto_word
-            .iter()
-            .map(|syl| Syllable {
-                onset: syl.onset.clone(),
-                nucleus: syl.nucleus.unwrap(),
-                coda: syl.coda.clone(),
-                stress: if proto_word.len() == 1 {
-                    None
-                } else {
-                    syl.stress
-                },
-            })
-            .collect(),
-    };
 
-    Ok(word)
+    // Build a word from the proto_word.
+    // If it is only one syllable long, remove stress information
+    // Note: Should avoid unwrap. Rather than check the nuclei above, the map should return a
+    // result which should then be checked for errors
+    let checked_syls = proto_word
+        .iter()
+        .map(|syl| {
+            if syl.nucleus.is_none() {
+                Err(WordConstructorError::new(
+                    "Bad structure: no nucleus in syllable",
+                ))
+            } else {
+                Ok(Syllable {
+                    onset: syl.onset.clone(),
+                    nucleus: syl.nucleus.unwrap(), // This has been checked above. Should be okay.
+                    coda: syl.coda.clone(),
+                    stress: if proto_word.len() == 1 {
+                        None
+                    } else {
+                        syl.stress
+                    },
+                })
+            }
+        })
+        .collect();
+
+    // I'm sure this can be simplified, but I don't know how yet
+    match checked_syls {
+        Ok(syls) => Ok(Word { syls }),
+        Err(err) => Err(err),
+    }
 }
 
 // Read a symbol from a word_desc and modify the under-construction word accordingly
@@ -188,9 +200,11 @@ where
     } else {
         current_syl.coda.push(phoneme);
     }
-    None
+
+    None // complete with no errors
 }
 
+// The collection of stress/syllable break symbols used in word builder descriptions
 fn is_stress_symbol(sym: &str) -> bool {
     "1234ˈˌ.".contains(sym)
 }
@@ -224,5 +238,121 @@ impl fmt::Display for WordConstructorError {
 impl Error for WordConstructorError {
     fn description(&self) -> &str {
         &self.msg
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use crate::features::Segment;
+
+    //mock accent used for testing
+    fn mock_accent(s: &str) -> Option<Phoneme> {
+        // when adding new symbols, be sure to also mark vowels as syllabic in mock_seg
+        match s {
+            "h" => Some(mock_phon_m('h')),
+            "ɛ" => Some(mock_phon_m('ɛ')),
+            "l" => Some(mock_phon_m('l')),
+            "o͡ʊ" => Some(mock_phon_d('o', 'ʊ')),
+            "t" => Some(mock_phon_m('t')),
+            "s" => Some(mock_phon_m('s')),
+            "i" => Some(mock_phon_m('i')),
+            "ɚ" => Some(mock_phon_m('ɚ')),
+            _ => None,
+        }
+    }
+
+    fn mock_phon_m(sym: char) -> Phoneme {
+        Phoneme::Monosegment(mock_seg(sym))
+    }
+
+    fn mock_phon_d(sym1: char, sym2: char) -> Phoneme {
+        Phoneme::Disegment(mock_seg(sym1), mock_seg(sym2))
+    }
+
+    fn mock_seg(sym: char) -> Segment {
+        // The only fields that matter here are symbol and root_features.syllabic
+        Segment {
+            symbol: sym,
+            root_features: features::RootFeatures {
+                // mark vowels as +syllabic
+                syllabic: if "ɛɚʊoi".contains(sym) {
+                    features::BinaryFeature::Marked
+                } else {
+                    features::BinaryFeature::Unmarked
+                },
+                sonorant: features::BinaryFeature::Unmarked,
+                consonantal: features::BinaryFeature::Unmarked,
+            },
+            autosegmental_features: features::AutosegmentalFeatures::default(),
+        }
+    }
+
+    #[test]
+    //testing multiple syllables, breve-connected symbols, syllable break marker, only onsets
+    fn test_from_accent() -> Result<(), WordConstructorError> {
+        assert_eq!(
+            from_accent(mock_accent, "ˈhɛ.lo͡ʊ")?,
+            Word {
+                syls: vec![
+                    Syllable {
+                        onset: vec![mock_phon_m('h')],
+                        nucleus: mock_phon_m('ɛ'),
+                        coda: vec![],
+                        stress: Some(Stress::Stressed),
+                    },
+                    Syllable {
+                        onset: vec![mock_phon_m('l')],
+                        nucleus: mock_phon_d('o', 'ʊ'),
+                        coda: vec![],
+                        stress: Some(Stress::Unstressed),
+                    }
+                ]
+            }
+        );
+        Ok(())
+    }
+
+    #[test]
+    //testing single syl, no stress, both onset and codas
+    fn test_from_accent_single_syl() -> Result<(), WordConstructorError> {
+        assert_eq!(
+            from_accent(mock_accent, "tɛst")?,
+            Word {
+                syls: vec![Syllable {
+                    onset: vec![mock_phon_m('t')],
+                    nucleus: mock_phon_m('ɛ'),
+                    coda: vec![mock_phon_m('s'), mock_phon_m('t')],
+                    stress: None,
+                }]
+            }
+        );
+        Ok(())
+    }
+
+    #[test]
+    //testing use of numbered stress
+    fn test_from_accent_numbered_stress() -> Result<(), WordConstructorError> {
+        assert_eq!(
+            from_accent(mock_accent, "2ti4tɚ")?,
+            Word {
+                syls: vec![
+                    Syllable {
+                        onset: vec![mock_phon_m('t')],
+                        nucleus: mock_phon_m('i'),
+                        coda: vec![],
+                        stress: Some(Stress::SecondaryStress),
+                    },
+                    Syllable {
+                        onset: vec![mock_phon_m('t')],
+                        nucleus: mock_phon_m('ɚ'),
+                        coda: vec![],
+                        stress: Some(Stress::ReducedStress),
+                    }
+                ]
+            }
+        );
+        Ok(())
     }
 }

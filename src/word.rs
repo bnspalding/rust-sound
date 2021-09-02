@@ -10,6 +10,7 @@ use crate::syllable::Syllable;
 /// A word is a collection of syllables. It represents a spoken word, or
 /// perhaps the pronunciation information that would correspond to a written
 /// word.
+#[derive(PartialEq, Eq, Debug)]
 pub struct Word {
     /// the collection of syllables that comprise a word
     pub syls: Vec<Syllable>,
