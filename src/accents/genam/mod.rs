@@ -44,7 +44,19 @@ pub fn phonemes() -> HashSet<&'static Phoneme> {
     sounds::SOUNDS.values().collect()
 }
 
-/// TODO: write documentation
+/// word provides a constructor for syllable-structured groups of General American English
+/// phonemes. Given a collection of IPA symbols for the sounds of the word, return either a Word
+/// comprised of those phonemes or a WordConstructorError. See
+/// [`crate::builders::words::from_accent()`]
+/// for more information, as this function is simply a GenAm wrapper for that function.
+///
+/// TODO: write an explanation of the syntax for word_desc here
+///
+/// # Examples
+///
+/// ```
+/// # TODO: write example
+/// ```
 pub fn word(word_desc: &str) -> Result<Word, WordConstructorError> {
     from_accent(phoneme, word_desc)
 }
