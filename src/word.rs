@@ -10,6 +10,7 @@ use crate::syllable::Syllable;
 /// A word is a collection of syllables. It represents a spoken word, or
 /// perhaps the pronunciation information that would correspond to a written
 /// word.
+#[derive(PartialEq, Eq, Debug)]
 pub struct Word(Vec<Syllable>);
 
 impl Word {
@@ -73,12 +74,13 @@ impl From<Vec<Syllable>> for Word {
         Word(syls)
     }
 }
-
+/*
 impl Into<Vec<Syllable>> for Word {
     fn into(self) -> Vec<Syllable> {
         self.0
     }
 }
+*/
 
 impl IntoIterator for Word {
     type Item = Syllable;
