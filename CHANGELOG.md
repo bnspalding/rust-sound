@@ -9,6 +9,7 @@
 - General American English phoneme set
 - Syllable structure
 - Word structure
+- Natural class tests for phonemes
 
 ### Changed
 - Phoneme symbol is char (not string)
