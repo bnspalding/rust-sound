@@ -2,6 +2,7 @@
 //!
 //! Builders::Words provides a constructor for words. It parses a word description into a structured word (syllables and phonemes), using a given accent's phoneme lookup function.
 
+use crate::feature_classes;
 use crate::phoneme::Phoneme;
 use crate::stress::Stress;
 use crate::syllable::Syllable;
@@ -66,7 +67,7 @@ pub fn from_accent(
             })?;
 
             // vowels: only 1 vowel is permitted in a syllable
-            if is_vowel(phoneme) {
+            if feature_classes::is_vowel(phoneme) {
                 nucleus_maybe = match nucleus_maybe {
                     None => Ok(Some(phoneme)),
                     Some(existing_phoneme) => {
@@ -188,32 +189,12 @@ fn split_word_desc(
     Ok(syllables_as_symbols)
 }
 
-fn is_vowel(p: Phoneme) -> bool {
-    //NOTE: This code should live somewhere else. It should be easy to check if a phoneme
-    //belongs to some basic classes
-    use crate::features::BinaryFeature;
-
-    match p {
-        Phoneme::Monosegment(seg) => {
-            seg.root_features.syllabic == BinaryFeature::Marked
-        }
-        Phoneme::Disegment(seg1, seg2) => {
-            seg1.root_features.syllabic == BinaryFeature::Marked
-                || seg2.root_features.syllabic == BinaryFeature::Marked
-        }
-    }
-}
-
 /// An error created during the construction of a word from a word description string
-//TODO: give this error a clearer enum structure
-// Types of errors:
-//   - unknown phoneme (return None from accent fn)
-//   - bad syllable structure
-//      - no vowel (no nucleus),
-//      - too many vowels,
-//      - empty syllable (only stress mark)
-//      - no stress information for syllable
-//  - bad word description
+///
+/// For the moment, these errors are contained by a single type and differentied only in their
+/// description. The resolution to all of the errors is "examine your input string for errors", so
+/// it doesn't feel sensible to differentiate the errors further than by providing some guidance in
+/// the message.
 #[derive(Debug)]
 pub struct WordConstructorError {
     msg: String,
@@ -233,11 +214,7 @@ impl fmt::Display for WordConstructorError {
     }
 }
 
-impl Error for WordConstructorError {
-    fn description(&self) -> &str {
-        &self.msg
-    }
-}
+impl Error for WordConstructorError {}
 
 #[cfg(test)]
 mod tests {
