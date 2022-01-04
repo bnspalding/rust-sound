@@ -14,5 +14,3 @@
   and beyond the representation of IPA symbols in the library.
   Also consider the way that IPA symbols can be modified and relate to each other (aspirated consonant: 'p' and 'pʰ')
   An IPA representation that is limited to a single character without modifiers cannot represent all IPA symbols.
-
-- feature accessors: get feature information without knowing full structure

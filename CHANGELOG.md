@@ -11,6 +11,7 @@
 - Word structure
 - Natural class tests for phonemes
 - Word builder from IPA symbols
+- Structure-blind feature accessors for segments
 
 ### Changed
 - Phoneme symbol is char (not string)

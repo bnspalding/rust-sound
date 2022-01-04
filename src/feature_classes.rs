@@ -6,12 +6,13 @@
 //! phoneme an X (vowel, nasal, fricative, ...)" it is better to use these functions than to
 //! construct the test ad hoc.
 
+use crate::features::accessors::*;
 use crate::features::{BinaryFeature, Segment, UnaryFeature};
 use crate::phoneme::Phoneme;
 
 /// A vowel is any phoneme that goes in the nucleus of a syllable. They are marked +syllabic.
 pub fn is_vowel(p: Phoneme) -> bool {
-    any_segment(p, |seg| seg.root_features.syllabic == BinaryFeature::Marked)
+    any_segment(p, |seg| get_syllabic(seg) == BinaryFeature::Marked)
 }
 
 /// A consonant is any phoneme that does not go in the nucleus of a syllable. They are marked
@@ -24,41 +25,33 @@ pub fn is_consonant(p: Phoneme) -> bool {
 /// A semivowel is a phoneme with (-consonantal, -syllabic) features.
 pub fn is_semivowel(p: Phoneme) -> bool {
     any_segment(p, |seg| {
-        seg.root_features.syllabic == BinaryFeature::Unmarked
-            && seg.root_features.consonantal == BinaryFeature::Unmarked
+        get_syllabic(seg) == BinaryFeature::Unmarked
+            && get_consonantal(seg) == BinaryFeature::Unmarked
     })
 }
 
 /// A voiced phoneme is +voiced
 pub fn is_voiced(p: Phoneme) -> bool {
     any_segment(p, |seg| {
-        seg.autosegmental_features
-            .laryngeal
-            .and_then(|laryn| laryn.voice)
-            .map_or(false, |voice| voice == BinaryFeature::Marked)
+        get_voice(seg).map_or(false, |voice| voice == BinaryFeature::Marked)
     })
 }
 
 /// A stop is a phoneme with (-sonorant, -continuant) features
 pub fn is_stop(p: Phoneme) -> bool {
     any_segment(p, |seg| {
-        seg.root_features.sonorant == BinaryFeature::Unmarked
-            && seg
-                .autosegmental_features
-                .continuant
-                .map_or(false, |continuant| {
-                    continuant == BinaryFeature::Unmarked
-                })
+        get_sonorant(seg) == BinaryFeature::Unmarked
+            && get_continuant(seg).map_or(false, |continuant| {
+                continuant == BinaryFeature::Unmarked
+            })
     })
 }
 
 /// A fricative is a phoneme with (-sonorant, +continuant) features
 pub fn is_fricative(p: Phoneme) -> bool {
     any_segment(p, |seg| {
-        seg.root_features.sonorant == BinaryFeature::Unmarked
-            && seg
-                .autosegmental_features
-                .continuant
+        get_sonorant(seg) == BinaryFeature::Unmarked
+            && get_continuant(seg)
                 .map_or(false, |continuant| continuant == BinaryFeature::Marked)
     })
 }
@@ -66,11 +59,9 @@ pub fn is_fricative(p: Phoneme) -> bool {
 /// An approximant is a phoneme with (+sonorant, -syllabic, +continuant) features
 pub fn is_approximant(p: Phoneme) -> bool {
     any_segment(p, |seg| {
-        seg.root_features.sonorant == BinaryFeature::Marked
-            && seg.root_features.syllabic == BinaryFeature::Unmarked
-            && seg
-                .autosegmental_features
-                .continuant
+        get_sonorant(seg) == BinaryFeature::Marked
+            && get_syllabic(seg) == BinaryFeature::Unmarked
+            && get_continuant(seg)
                 .map_or(false, |continuant| continuant == BinaryFeature::Marked)
     })
 }
@@ -107,12 +98,7 @@ pub fn is_lateral(p: Phoneme) -> bool {
 pub fn is_high_vowel(p: Phoneme) -> bool {
     any_segment(p, |seg| {
         seg.root_features.syllabic == BinaryFeature::Marked
-            && seg
-                .autosegmental_features
-                .place
-                .and_then(|place| place.dorsal)
-                .and_then(|dorsal| dorsal.high)
-                .map_or(false, |high| high == BinaryFeature::Marked)
+            && get_high(seg).map_or(false, |high| high == BinaryFeature::Marked)
     })
 }
 
@@ -120,12 +106,7 @@ pub fn is_high_vowel(p: Phoneme) -> bool {
 pub fn is_low_vowel(p: Phoneme) -> bool {
     any_segment(p, |seg| {
         seg.root_features.syllabic == BinaryFeature::Marked
-            && seg
-                .autosegmental_features
-                .place
-                .and_then(|place| place.dorsal)
-                .and_then(|dorsal| dorsal.low)
-                .map_or(false, |low| low == BinaryFeature::Marked)
+            && get_low(seg).map_or(false, |low| low == BinaryFeature::Marked)
     })
 }
 
@@ -133,18 +114,9 @@ pub fn is_low_vowel(p: Phoneme) -> bool {
 pub fn is_mid_vowel(p: Phoneme) -> bool {
     any_segment(p, |seg| {
         seg.root_features.syllabic == BinaryFeature::Marked
-            && seg
-                .autosegmental_features
-                .place
-                .and_then(|place| place.dorsal)
-                .and_then(|dorsal| dorsal.high)
+            && get_high(seg)
                 .map_or(false, |high| high == BinaryFeature::Unmarked)
-            && seg
-                .autosegmental_features
-                .place
-                .and_then(|place| place.dorsal)
-                .and_then(|dorsal| dorsal.low)
-                .map_or(false, |low| low == BinaryFeature::Unmarked)
+            && get_low(seg).map_or(false, |low| low == BinaryFeature::Unmarked)
     })
 }
 

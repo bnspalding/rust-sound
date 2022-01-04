@@ -1,7 +1,6 @@
 //! Distinctive features for describing phonemes.
 //!
 //! ## Distinctive Features
-//!
 //! A Phoneme can be decomposed into a collection of abstract features that
 //! describe that sound. These features are based on perceptible qualities that
 //! exist in a phoneme's sound wave based on the physical/mechanical means by
@@ -234,4 +233,384 @@ pub struct LaryngealFeatures {
     pub constricted_glottis: Option<UnaryFeature>,
     ///vibrating vocal folds: 'b', 'd', 'ɡ' (+); 'p', 't', 'k' (-)
     pub voice: Option<BinaryFeature>,
+}
+
+/// structure-blind accessors for segment features
+pub mod accessors {
+    use super::*;
+
+    /// structure-blind accessor for consonantal feature.
+    pub fn get_consonantal(segment: Segment) -> BinaryFeature {
+        segment.root_features.consonantal
+    }
+
+    /// structure-blind accessor for sonorant feature.
+    pub fn get_sonorant(segment: Segment) -> BinaryFeature {
+        segment.root_features.sonorant
+    }
+
+    /// structure-blind accessor for syllabic feature.
+    pub fn get_syllabic(segment: Segment) -> BinaryFeature {
+        segment.root_features.syllabic
+    }
+
+    /// structure-blind accessor for continuant feature.
+    pub fn get_continuant(segment: Segment) -> Option<BinaryFeature> {
+        segment.autosegmental_features.continuant
+    }
+
+    /// structure-blind accessor for strident feature.
+    pub fn get_strident(segment: Segment) -> Option<BinaryFeature> {
+        segment.autosegmental_features.strident
+    }
+
+    /// structure-blind accessor for lateral feature.
+    pub fn get_lateral(segment: Segment) -> Option<UnaryFeature> {
+        segment.autosegmental_features.lateral
+    }
+
+    /// structure-blind accessor for nasal feature.
+    pub fn get_nasal(segment: Segment) -> Option<UnaryFeature> {
+        segment.autosegmental_features.nasal
+    }
+
+    /// structure-blind accessor for laryngeal feature.
+    pub fn get_laryngeal(segment: Segment) -> Option<LaryngealFeatures> {
+        segment.autosegmental_features.laryngeal
+    }
+
+    /// structure-blind accessor for spread_glottis feature.
+    pub fn get_spread_glottis(segment: Segment) -> Option<UnaryFeature> {
+        segment
+            .autosegmental_features
+            .laryngeal
+            .and_then(|laryn| laryn.spread_glottis)
+    }
+
+    /// structure-blind accessor for constricted_glottis feature.
+    pub fn get_constricted_glottis(segment: Segment) -> Option<UnaryFeature> {
+        segment
+            .autosegmental_features
+            .laryngeal
+            .and_then(|laryn| laryn.constricted_glottis)
+    }
+
+    /// structure-blind accessor for voice feature.
+    pub fn get_voice(segment: Segment) -> Option<BinaryFeature> {
+        segment
+            .autosegmental_features
+            .laryngeal
+            .and_then(|laryn| laryn.voice)
+    }
+
+    /// structure-blind accessor for rhotic feature.
+    pub fn get_rhotic(segment: Segment) -> Option<UnaryFeature> {
+        segment.autosegmental_features.rhotic
+    }
+
+    /// structure-blind accessor for labial feature.
+    pub fn get_labial(segment: Segment) -> Option<LabialFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.labial)
+    }
+
+    /// structure-blind accessor for round feature.
+    pub fn get_round(segment: Segment) -> Option<UnaryFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.labial)
+            .and_then(|labial| labial.round)
+    }
+
+    /// structure-blind accessor for coronal feature.
+    pub fn get_coronal(segment: Segment) -> Option<CoronalFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.coronal)
+    }
+
+    /// structure-blind accessor for anterior feature.
+    pub fn get_anterior(segment: Segment) -> Option<BinaryFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.coronal)
+            .and_then(|coronal| coronal.anterior)
+    }
+
+    /// structure-blind accessor for distrib feature.
+    pub fn get_distrib(segment: Segment) -> Option<BinaryFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.coronal)
+            .and_then(|coronal| coronal.distrib)
+    }
+
+    /// structure-blind accessor for dorsal feature.
+    pub fn get_dorsal(segment: Segment) -> Option<DorsalFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.dorsal)
+    }
+
+    /// structure-blind accessor for high feature.
+    pub fn get_high(segment: Segment) -> Option<BinaryFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.dorsal)
+            .and_then(|dorsal| dorsal.high)
+    }
+
+    /// structure-blind accessor for low feature.
+    pub fn get_low(segment: Segment) -> Option<BinaryFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.dorsal)
+            .and_then(|dorsal| dorsal.low)
+    }
+
+    /// structure-blind accessor for back feature.
+    pub fn get_back(segment: Segment) -> Option<BinaryFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.dorsal)
+            .and_then(|dorsal| dorsal.back)
+    }
+
+    /// structure-blind accessor for pharyngeal feature.
+    pub fn get_pharyngeal(segment: Segment) -> Option<PharyngealFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.pharyngeal)
+    }
+
+    /// structure-blind accessor for advanced_tongue_root feature.
+    pub fn get_advanced_tongue_root(segment: Segment) -> Option<BinaryFeature> {
+        segment
+            .autosegmental_features
+            .place
+            .and_then(|place| place.pharyngeal)
+            .and_then(|pharyn| pharyn.advanced_tongue_root)
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        const TEST_SEGMENT: Segment = Segment {
+            root_features: RootFeatures {
+                consonantal: BinaryFeature::Marked,
+                sonorant: BinaryFeature::Marked,
+                syllabic: BinaryFeature::Marked,
+            },
+            autosegmental_features: AutosegmentalFeatures {
+                nasal: Some(UnaryFeature::Marked),
+                lateral: Some(UnaryFeature::Marked),
+                rhotic: Some(UnaryFeature::Marked),
+                continuant: Some(BinaryFeature::Marked),
+                strident: Some(BinaryFeature::Marked),
+                laryngeal: Some(LaryngealFeatures {
+                    spread_glottis: Some(UnaryFeature::Marked),
+                    constricted_glottis: Some(UnaryFeature::Marked),
+                    voice: Some(BinaryFeature::Marked),
+                }),
+                place: Some(Place {
+                    labial: Some(LabialFeature {
+                        round: Some(UnaryFeature::Marked),
+                    }),
+                    coronal: Some(CoronalFeature {
+                        anterior: Some(BinaryFeature::Marked),
+                        distrib: Some(BinaryFeature::Marked),
+                    }),
+                    dorsal: Some(DorsalFeature {
+                        high: Some(BinaryFeature::Marked),
+                        low: Some(BinaryFeature::Marked),
+                        back: Some(BinaryFeature::Marked),
+                    }),
+                    pharyngeal: Some(PharyngealFeature {
+                        advanced_tongue_root: Some(BinaryFeature::Marked),
+                    }),
+                }),
+            },
+            symbol: '0',
+        };
+
+        #[test]
+        fn test_accessor_consonantal() {
+            let feature = get_consonantal(TEST_SEGMENT);
+            assert_eq!(feature, BinaryFeature::Marked)
+        }
+
+        #[test]
+        fn test_accessor_sonorant() {
+            let feature = get_sonorant(TEST_SEGMENT);
+            assert_eq!(feature, BinaryFeature::Marked)
+        }
+
+        #[test]
+        fn test_accessor_syllabic() {
+            let feature = get_syllabic(TEST_SEGMENT);
+            assert_eq!(feature, BinaryFeature::Marked)
+        }
+
+        #[test]
+        fn test_accessor_continuant() {
+            let feature = get_continuant(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_strident() {
+            let feature = get_strident(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_lateral() {
+            let feature = get_lateral(TEST_SEGMENT);
+            assert_eq!(feature, Some(UnaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_nasal() {
+            let feature = get_nasal(TEST_SEGMENT);
+            assert_eq!(feature, Some(UnaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_laryngeal() {
+            let feature = get_laryngeal(TEST_SEGMENT);
+            assert_eq!(
+                feature,
+                Some(LaryngealFeatures {
+                    spread_glottis: Some(UnaryFeature::Marked),
+                    constricted_glottis: Some(UnaryFeature::Marked),
+                    voice: Some(BinaryFeature::Marked),
+                })
+            )
+        }
+
+        #[test]
+        fn test_accessor_spread_glottis() {
+            let feature = get_spread_glottis(TEST_SEGMENT);
+            assert_eq!(feature, Some(UnaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_constricted_glottis() {
+            let feature = get_constricted_glottis(TEST_SEGMENT);
+            assert_eq!(feature, Some(UnaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_voice() {
+            let feature = get_voice(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_rhotic() {
+            let feature = get_rhotic(TEST_SEGMENT);
+            assert_eq!(feature, Some(UnaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_labial() {
+            let feature = get_labial(TEST_SEGMENT);
+            assert_eq!(
+                feature,
+                Some(LabialFeature {
+                    round: Some(UnaryFeature::Marked),
+                })
+            )
+        }
+
+        #[test]
+        fn test_accessor_round() {
+            let feature = get_round(TEST_SEGMENT);
+            assert_eq!(feature, Some(UnaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_coronal() {
+            let feature = get_coronal(TEST_SEGMENT);
+            assert_eq!(
+                feature,
+                Some(CoronalFeature {
+                    anterior: Some(BinaryFeature::Marked),
+                    distrib: Some(BinaryFeature::Marked),
+                })
+            )
+        }
+
+        #[test]
+        fn test_accessor_anterior() {
+            let feature = get_anterior(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_distrib() {
+            let feature = get_distrib(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_dorsal() {
+            let feature = get_dorsal(TEST_SEGMENT);
+            assert_eq!(
+                feature,
+                Some(DorsalFeature {
+                    high: Some(BinaryFeature::Marked),
+                    low: Some(BinaryFeature::Marked),
+                    back: Some(BinaryFeature::Marked),
+                })
+            )
+        }
+
+        #[test]
+        fn test_accessor_high() {
+            let feature = get_high(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_low() {
+            let feature = get_low(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_back() {
+            let feature = get_back(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+
+        #[test]
+        fn test_accessor_pharyngeal() {
+            let feature = get_pharyngeal(TEST_SEGMENT);
+            assert_eq!(
+                feature,
+                Some(PharyngealFeature {
+                    advanced_tongue_root: Some(BinaryFeature::Marked)
+                })
+            )
+        }
+
+        #[test]
+        fn test_accessor_advanced_tongue_root() {
+            let feature = get_advanced_tongue_root(TEST_SEGMENT);
+            assert_eq!(feature, Some(BinaryFeature::Marked))
+        }
+    }
 }
