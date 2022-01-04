@@ -14,6 +14,11 @@ use crate::syllable::Syllable;
 pub struct Word(Vec<Syllable>);
 
 impl Word {
+    /// Create a word from a collection of syllables.
+    pub fn new(syllables: &[Syllable]) -> Word {
+        Word(syllables.to_vec())
+    }
+
     /// phonemes combines the flattened phoneme sets of a word's syllables into
     /// a single vector. The structure (onset-nucleus-coda) of the syllables is
     /// lost in this transformation.

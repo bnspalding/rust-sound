@@ -11,7 +11,7 @@ use crate::stress::Stress;
 
 /// A Syllable describes a structured collection of phonemes, what people commonly
 /// distinguish as the unit out of which words are constructed.
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Debug, Clone)]
 pub struct Syllable {
     /// The onset is the collection of phonemes that begin a syllable
     pub onset: Vec<Phoneme>,
@@ -25,6 +25,21 @@ pub struct Syllable {
 }
 
 impl Syllable {
+    /// Create a new syllable from its constituant parts: onset, nucleus, coda, stress.
+    pub fn new(
+        onset: &[Phoneme],
+        nucleus: Phoneme,
+        coda: &[Phoneme],
+        stress: Option<Stress>,
+    ) -> Syllable {
+        Syllable {
+            onset: onset.to_vec(),
+            nucleus,
+            coda: coda.to_vec(),
+            stress,
+        }
+    }
+
     /// The rhyme is the nucleus and coda of a syllable together.
     pub fn rhyme(&self) -> Vec<Phoneme> {
         let mut vec = vec![self.nucleus];
@@ -71,6 +86,19 @@ mod tests {
 
     fn phon(s: &str) -> Phoneme {
         phoneme(s).unwrap()
+    }
+
+    #[test]
+    fn test_new() {
+        assert_eq!(
+            test_syl(),
+            Syllable::new(
+                &[phon("p"), phon("ɹ")],
+                phon("ɑ"),
+                &[phon("p")],
+                Some(Stress::Stressed)
+            )
+        )
     }
 
     #[test]
