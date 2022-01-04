@@ -55,7 +55,7 @@ pub fn is_stop(p: Phoneme) -> bool {
 /// A fricative is a phoneme with (-sonorant, +continuant) features
 pub fn is_fricative(p: Phoneme) -> bool {
     any_segment(p, |seg| {
-        &&seg.root_features.sonorant == BinaryFeature::Unmarked
+        seg.root_features.sonorant == BinaryFeature::Unmarked
             && seg
                 .autosegmental_features
                 .continuant
