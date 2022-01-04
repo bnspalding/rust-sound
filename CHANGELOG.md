@@ -10,6 +10,7 @@
 - Syllable structure
 - Word structure
 - Natural class tests for phonemes
+- Word builder from IPA symbols
 
 ### Changed
 - Phoneme symbol is char (not string)
