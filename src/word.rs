@@ -10,18 +10,22 @@ use crate::syllable::Syllable;
 /// A word is a collection of syllables. It represents a spoken word, or
 /// perhaps the pronunciation information that would correspond to a written
 /// word.
-pub struct Word {
-    syls: Vec<Syllable>,
-}
+#[derive(PartialEq, Eq, Debug)]
+pub struct Word(Vec<Syllable>);
 
 impl Word {
+    /// Create a word from a collection of syllables.
+    pub fn new(syllables: &[Syllable]) -> Word {
+        Word(syllables.to_vec())
+    }
+
     /// phonemes combines the flattened phoneme sets of a word's syllables into
     /// a single vector. The structure (onset-nucleus-coda) of the syllables is
     /// lost in this transformation.
-    pub fn phonemes(&self) -> Vec<Phoneme> {
+    pub fn phonemes(self) -> Vec<Phoneme> {
         let mut vec = Vec::new();
 
-        for syl in &self.syls {
+        for syl in self {
             vec.extend(syl.phonemes())
         }
 
@@ -30,10 +34,10 @@ impl Word {
 
     /// stresses provides the list of stress levels corresponding to each syl
     /// in a word.
-    pub fn stresses(&self) -> Vec<Stress> {
+    pub fn stresses(self) -> Vec<Stress> {
         let mut vec = Vec::new();
 
-        for syl in &self.syls {
+        for syl in self {
             if let Some(stress) = syl.stress {
                 vec.push(stress)
             }
@@ -47,40 +51,48 @@ impl Word {
     /// Syllables are separated by the '.' character, except for syllables that
     /// begin with an IPA stress mark, which serves as a syllable separator in
     /// place of the dot.
-    pub fn symbols(&self) -> String {
-        if self.syls.is_empty() {
+    pub fn symbols(self) -> String {
+        if self.0.is_empty() {
             return String::from("");
         }
 
         let mut syms = String::new();
 
-        // First syllable
-        // It must be handled differently because there should be no stress
-        // mark for unstressed first syllables.
-        let first_syl = &self.syls[0];
-        let separator =
-            first_syl.stress.and_then(|s| s.symbol()).unwrap_or('.');
-        if separator != '.' {
-            syms.push(separator)
-        }
-        syms.push_str(&first_syl.symbols());
-        if self.syls.len() == 1 {
-            return syms;
-        }
-
-        // Remaining syllables
-        for syl in &self.syls[1..] {
+        for (i, syl) in self.into_iter().enumerate() {
             let separator = syl
                 .stress
                 .unwrap_or(Stress::Unstressed)
                 .symbol()
                 .unwrap_or('.');
-
-            syms.push(separator);
-            syms.push_str(&syl.symbols())
+            if i != 0 || separator != '.' {
+                syms.push(separator);
+            }
+            syms.push_str(&syl.symbols());
         }
 
         syms
+    }
+}
+
+impl From<Vec<Syllable>> for Word {
+    fn from(syls: Vec<Syllable>) -> Word {
+        Word(syls)
+    }
+}
+/*
+impl Into<Vec<Syllable>> for Word {
+    fn into(self) -> Vec<Syllable> {
+        self.0
+    }
+}
+*/
+
+impl IntoIterator for Word {
+    type Item = Syllable;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
     }
 }
 
@@ -117,22 +129,20 @@ mod tests {
     }
 
     fn test_word() -> Word {
-        Word {
-            syls: vec![
-                mk_syl(
-                    phons(vec!["p"]),
-                    phon("ʌ"),
-                    phons(vec!["m", "p"]),
-                    Stress::Stressed,
-                ),
-                mk_syl(
-                    phons(vec!["k"]),
-                    phon("ɪ"),
-                    phons(vec!["n"]),
-                    Stress::Unstressed,
-                ),
-            ],
-        }
+        Word::from(vec![
+            mk_syl(
+                phons(vec!["p"]),
+                phon("ʌ"),
+                phons(vec!["m", "p"]),
+                Stress::Stressed,
+            ),
+            mk_syl(
+                phons(vec!["k"]),
+                phon("ɪ"),
+                phons(vec!["n"]),
+                Stress::Unstressed,
+            ),
+        ])
     }
 
     #[test]

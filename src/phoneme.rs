@@ -34,6 +34,12 @@ impl Phoneme {
     }
 }
 
+impl From<Segment> for Phoneme {
+    fn from(seg: Segment) -> Self {
+        Phoneme::Monosegment(seg)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::Phoneme::{Disegment, Monosegment};

@@ -1,10 +1,13 @@
 //! GenAm Sound Definitions
 //!
 //! This module provides a mapping from a set of IPA symbols to a set of
-//! phonemes, based on the 'General American English' accent (see
-//! <https://en.wikipedia.org/wiki/General_American_English>).
+//! phonemes, based on the '[General American English]' accent.
+//!
+//! [General American English]: <https://en.wikipedia.org/wiki/General_American_English>
 
+use crate::builders::words::{from_accent, WordConstructorError};
 use crate::phoneme::Phoneme;
+use crate::word::Word;
 use std::collections::HashSet;
 
 mod sounds;
@@ -40,6 +43,36 @@ pub fn symbols() -> HashSet<&'static str> {
 /// The set of Phonemes that comprise the GenAm accent
 pub fn phonemes() -> HashSet<&'static Phoneme> {
     sounds::SOUNDS.values().collect()
+}
+
+/// word provides a constructor for syllable-structured groups of General American English
+/// phonemes. Given a collection of IPA symbols for the sounds of the word, return either a Word
+/// comprised of those phonemes or a [WordConstructorError].
+///
+/// See [from_accent] for more information, as this function is simply
+/// a GenAm wrapper for that function.
+///
+/// # Examples
+///
+/// ```
+/// # use sound::accents::genam::{phoneme, word};
+/// # use sound::syllable::Syllable;
+/// # use sound::word::Word;
+/// # use sound::stress::Stress;
+///
+/// let w = word("ˈhɛ.lo͡ʊ").unwrap();
+///
+/// assert_eq!(
+///     w,
+///     Word::new(&[
+///         Syllable::new(&[phoneme("h").unwrap()], phoneme("ɛ").unwrap(), &[], Some(Stress::Stressed)),
+///         Syllable::new(&[phoneme("l").unwrap()], phoneme("o͡ʊ").unwrap(), &[], Some(Stress::Unstressed)),
+///         ])
+/// );
+///
+/// ```
+pub fn word(word_desc: &str) -> Result<Word, WordConstructorError> {
+    from_accent(phoneme, word_desc)
 }
 
 #[cfg(test)]
